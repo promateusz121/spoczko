@@ -10,9 +10,6 @@ local function openCrate(name)
     game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer("Crates.Buy", workspace:FindFirstChild("Crates")[name])    
 end
 
-local function addPetGamesToken()
-    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer("PetGames.AddToken", plr)
-end
 
 -- // Main
 m:Toggle("SpeedHack", false, function (bool)
@@ -26,27 +23,51 @@ m:Toggle("SpeedHack", false, function (bool)
 end)
 
 local nc = nil
+local noclipConnection = nil
 m:Toggle("Noclip", false, function (bool)
     getgenv().settings.noclip = bool
     if getgenv().settings.noclip then
-        nc = game:GetService("RunService").Stepped:Connect(function ()
-            pcall(function ()
-                for _, child in pairs(plr.Character:GetDescendants()) do
-                    if child:IsA("BasePart") and child.CanCollide == true then
-                        child.CanCollide = false
+        local camera = workspace.CurrentCamera
+        noclipConnection = game:GetService("RunService").RenderStepped:Connect(function()
+            if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                local rootPart = plr.Character.HumanoidRootPart
+                local moveDirection = Vector3.new(0, 0, 0)
+
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then
+                    moveDirection = moveDirection + camera.CFrame.LookVector
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then
+                    moveDirection = moveDirection - camera.CFrame.LookVector
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) then
+                    moveDirection = moveDirection - camera.CFrame.RightVector
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) then
+                    moveDirection = moveDirection + camera.CFrame.RightVector
+                end
+                
+                rootPart.Velocity = moveDirection * 50  -- Szybkość poruszania się w noclipie
+                for _, part in pairs(plr.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
                     end
                 end
-            end)
+            end
         end)
-    elseif not getgenv().settings.noclip then
-        if nc then
-            nc:Disconnect()
+    else
+        if noclipConnection then
+            noclipConnection:Disconnect()
+            noclipConnection = nil
+        end
+        if plr.Character then
+            for _, part in pairs(plr.Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = true
+                end
+            end
         end
     end
 end)
 
-m:Button("Dodaj Pet Games Token", function()
-    addPetGamesToken()
-end)
 
 m:Label("~ DZINOLD SIGMA", Color3.fromRGB(127, 143, 166))
