@@ -38,3 +38,6 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
+m:Button("ZAMKNIJ MENU", function()
+    m:Close()
+end)
