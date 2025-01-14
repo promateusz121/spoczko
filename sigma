@@ -4,6 +4,10 @@ local players = game.Players
 local plr = players.LocalPlayer
 local characters = workspace:FindFirstChild("Characters")
 local UserInputService = game:GetService("UserInputService")
+local TextService = game:GetService("TextService") -- Aby wykrywać tekst na ekranie
+local RunService = game:GetService("RunService")
+
+getgenv().settings = {move_on_green = false}
 
 getgenv().settings = {speedhack = false, props = false, players = false, crates = false, attack = false, noclip = false}
 getgenv().play_settings = {props = false, seeker = false, taunt = false}
@@ -73,6 +77,43 @@ m:Toggle("Noclip", false, function (bool)
             end
         end
     end
+end)
+
+
+local function isTextOnScreen(targetText)
+    for _, guiObject in pairs(game.CoreGui:GetDescendants()) do
+        if guiObject:IsA("TextLabel") or guiObject:IsA("TextButton") or guiObject:IsA("TextBox") then
+            if string.match(guiObject.Text, targetText) then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
+local function moveCharacter(forward)
+    if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+        local humanoid = plr.Character.Humanoid
+        local moveVector = forward and Vector3.new(0, 0, -1) or Vector3.zero
+        humanoid:Move(moveVector, true)
+    end
+end
+
+RunService.RenderStepped:Connect(function()
+    if getgenv().settings.move_on_green then
+        if isTextOnScreen("Green Light") then
+            moveCharacter(true)
+        elseif isTextOnScreen("Red Light") then
+            moveCharacter(false)
+        else
+            moveCharacter(false) -- Zatrzymanie, jeśli nie ma odpowiedniego tekstu
+        end
+    end
+end)
+
+m:Toggle("Move on Green Light", false, function(bool)
+    getgenv().settings.move_on_green = bool
 end)
 
 
