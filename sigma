@@ -3,8 +3,6 @@ local m = lib:Window("SIGMA MENU")
 local players = game.Players
 local plr = players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
-local TextService = game:GetService("TextService") -- Aby wykrywać tekst na ekranie
-local RunService = game:GetService("RunService")
 
 getgenv().settings = {speedhack = false, props = false, players = false, crates = false, attack = false, noclip = false, move_on_green = false}
 getgenv().play_settings = {props = false, seeker = false, taunt = false}
@@ -76,49 +74,5 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
--- Funkcja do sprawdzania obecności napisu na ekranie
-local function isTextOnScreen(targetText)
-    for _, guiObject in pairs(game.CoreGui:GetDescendants()) do
-        if guiObject:IsA("TextLabel") or guiObject:IsA("TextButton") or guiObject:IsA("TextBox") then
-            if string.match(guiObject.Text, targetText) then
-                return true
-            end
-        end
-    end
-    return false
-end
-
--- Funkcja do poruszania postaci
-local function moveCharacter(forward)
-    if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-        local humanoid = plr.Character.Humanoid
-        if forward then
-            humanoid:Move(Vector3.new(0, 0, -1), true)
-        else
-            humanoid:Move(Vector3.zero, true)
-        end
-    end
-end
-
--- Główna pętla sterująca
-RunService.RenderStepped:Connect(function()
-    if getgenv().settings.move_on_green then
-        if isTextOnScreen("Green Light") then
-            moveCharacter(true)
-        elseif isTextOnScreen("Red Light") then
-            moveCharacter(false)
-        else
-            moveCharacter(false) -- Zatrzymanie, jeśli nie ma odpowiedniego tekstu
-        end
-    end
-end)
-
--- Toggle do włączania/wyłączania funkcji
-m:Toggle("Move on Green Light", false, function(bool)
-    getgenv().settings.move_on_green = bool
-    if not bool then
-        moveCharacter(false) -- Zatrzymanie postaci przy wyłączeniu funkcji
-    end
-end)
 
 m:Label("~ DZINOLD SIGMA", Color3.fromRGB(127, 143, 166))
