@@ -14,7 +14,7 @@ m:Toggle("SpeedHack", false, function (bool)
     while getgenv().settings.speedhack do
         local delta = game:GetService("RunService").Heartbeat:Wait()
         if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
-            plr.Character:TranslateBy(plr.Character.Humanoid.MoveDirection * 4 * delta * 10)
+            plr.Character:TranslateBy(plr.Character.Humanoid.MoveDirection * 4 * delta * 30)
         end
     end
 end)
