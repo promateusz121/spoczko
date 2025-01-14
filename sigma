@@ -5,19 +5,22 @@ local plr = players.LocalPlayer
 local characters = workspace:FindFirstChild("Characters")
 getgenv().settings = {speedhack = false, props = false, players = false, crates = false, attack = false, noclip = false}
 getgenv().play_settings = {props = false, seeker = false, taunt = false}
+
 local function openCrate(name)
     game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer("Crates.Buy", workspace:FindFirstChild("Crates")[name])    
 end
+
 -- // Main
 m:Toggle("SpeedHack", false, function (bool)
     getgenv().settings.speedhack = bool
     while getgenv().settings.speedhack do
         local delta = game:GetService("RunService").Heartbeat:Wait()
         if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
-            plr.Character:TranslateBy(plr.Character.Humanoid.MoveDirection * 4 * delta * 30)
+            plr.Character:TranslateBy(plr.Character.Humanoid.MoveDirection * 4 * delta * 50)  -- Zwiększenie prędkości
         end
     end
 end)
+
 local nc = nil
 m:Toggle("Noclip", false, function (bool)
     getgenv().settings.noclip = bool
@@ -39,5 +42,5 @@ m:Toggle("Noclip", false, function (bool)
 end)
 
 m:Button("ZAMKNIJ MENU", function()
-    m:Close()
+    m:Close() 
 end)
