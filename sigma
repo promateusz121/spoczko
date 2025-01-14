@@ -41,6 +41,10 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
-m:Button("ZAMKNIJ MENU", function()
-    m:Hide() 
+m:Label("~ SIGMA MENU", Color3.fromRGB(127, 143, 166))
+m:Button("ZAMKNIJ MENU", function ()
+    for _, s in pairs(getgenv().settings) do
+        getgenv().settings[s] = false
+    end
+    lib:Destroy()
 end)
