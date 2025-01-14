@@ -10,6 +10,10 @@ local function openCrate(name)
     game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer("Crates.Buy", workspace:FindFirstChild("Crates")[name])    
 end
 
+local function addPetGamesToken()
+    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer("PetGames.AddToken", plr)
+end
+
 -- // Main
 m:Toggle("SpeedHack", false, function (bool)
     getgenv().settings.speedhack = bool
@@ -41,15 +45,8 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
-m:Toggle("Infinite Jump", false, function (bool)
-    getgenv().settings.infiniteJump = bool
-    if getgenv().settings.infiniteJump then
-        plr.Character:WaitForChild("Humanoid").StateChanged:Connect(function(_, newState)
-            if newState == Enum.HumanoidStateType.Jumping or newState == Enum.HumanoidStateType.Freefall then
-                plr.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Physics)
-            end
-        end)
-    end
+m:Button("Dodaj Pet Games Token", function()
+    addPetGamesToken()
 end)
 
-m:Label("~ SIGMA MENU", Color3.fromRGB(127, 143, 166))
+m:Label("~ DZINOLD SIGMA", Color3.fromRGB(127, 143, 166))
