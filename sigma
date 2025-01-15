@@ -10,20 +10,6 @@ local function openCrate(name)
     game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer("Crates.Buy", workspace:FindFirstChild("Crates")[name])    
 end
 
--- // Function to teleport to all players one by one
-local function teleportToPlayers()
-    for _, target in pairs(players:GetPlayers()) do
-        if target ~= plr and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-            local targetRoot = target.Character.HumanoidRootPart
-            local playerRoot = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
-
-            if playerRoot then
-                playerRoot.CFrame = targetRoot.CFrame -- Teleport to the player
-                wait(1) -- Wait 1 second before teleporting to the next player
-            end
-        end
-    end
-end
 
 -- // Main
 m:Toggle("SpeedHack", false, function (bool)
@@ -88,12 +74,5 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
-m:Toggle("Teleport to Players", false, function(bool)
-    getgenv().settings.teleport_to_players = bool
-    while getgenv().settings.teleport_to_players do
-        teleportToPlayers()
-        wait(1) -- Delay to prevent rapid toggling issues
-    end
-end)
 
 m:Label("~ DZINOLD SIGMA", Color3.fromRGB(127, 143, 166))
