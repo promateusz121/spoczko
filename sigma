@@ -4,11 +4,30 @@ local players = game.Players
 local plr = players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 
-getgenv().settings = {speedhack = false, props = false, players = false, crates = false, attack = false, noclip = false, move_on_green = false}
-getgenv().play_settings = {props = false, seeker = false, taunt = false}
+getgenv().settings = {speedhack = false, props = false, players = false, crates = false, attack = false, noclip = false, move_on_green = false, kill_players = false}
 
 local function openCrate(name)
     game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer("Crates.Buy", workspace:FindFirstChild("Crates")[name])    
+end
+
+-- // Function to kill players within range
+local function killNearbyPlayers()
+    for _, target in pairs(players:GetPlayers()) do
+        if target ~= plr and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            local targetRoot = target.Character.HumanoidRootPart
+            local playerRoot = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+
+            if playerRoot then
+                local distance = (playerRoot.Position - targetRoot.Position).Magnitude
+                if distance <= 15 then -- Check if the player is within 15 meters
+                    local humanoid = target.Character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid.Health = 0 -- Kill the player
+                    end
+                end
+            end
+        end
+    end
 end
 
 -- // Main
@@ -17,7 +36,7 @@ m:Toggle("SpeedHack", false, function (bool)
     while getgenv().settings.speedhack do
         local delta = game:GetService("RunService").Heartbeat:Wait()
         if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
-            plr.Character:TranslateBy(plr.Character.Humanoid.MoveDirection * 4 * delta * 50)  -- Zwiększenie prędkości
+            plr.Character:TranslateBy(plr.Character.Humanoid.MoveDirection * 4 * delta * 15)  -- Zwiększenie prędkości
         end
     end
 end)
@@ -51,7 +70,7 @@ m:Toggle("Noclip", false, function (bool)
                     moveDirection = moveDirection - Vector3.new(0, 1, 0) 
                 end
 
-                rootPart.Velocity = moveDirection * 50  -- Szybkość poruszania się w noclipie
+                rootPart.Velocity = moveDirection * 15  -- Szybkość poruszania się w noclipie
                 for _, part in pairs(plr.Character:GetDescendants()) do
                     if part:IsA("BasePart") then
                         part.CanCollide = false
@@ -74,5 +93,12 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
+m:Toggle("Kill Players", false, function(bool)
+    getgenv().settings.kill_players = bool
+    while getgenv().settings.kill_players do
+        killNearbyPlayers()
+        wait(1) -- Delay to avoid overwhelming the game
+    end
+end)
 
 m:Label("~ DZINOLD SIGMA", Color3.fromRGB(127, 143, 166))
