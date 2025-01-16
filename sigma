@@ -8,63 +8,8 @@ local RunService = game:GetService("RunService")
 getgenv().settings = {
     speedhack = false,
     noclip = false,
-    recording = false,
-    playback = false
 }
 
-local recordedMovements = {}
-local startTime = 0
-
--- Function to start recording movements
-local function startRecording()
-    recordedMovements = {}
-    startTime = tick()
-    getgenv().settings.recording = true
-end
-
--- Function to stop recording
-local function stopRecording()
-    getgenv().settings.recording = false
-end
-
--- Function to play back recorded movements
-local function playBackMovements()
-    if #recordedMovements == 0 then return end
-    getgenv().settings.playback = true
-    local playbackStartTime = tick()
-    for _, movement in ipairs(recordedMovements) do
-        local delayTime = movement.timestamp - (playbackStartTime - startTime)
-        task.wait(delayTime)
-        if not getgenv().settings.playback then break end
-        if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-            plr.Character.HumanoidRootPart.CFrame = movement.cframe
-        end
-    end
-    getgenv().settings.playback = false
-end
-
--- Record player movements
-RunService.Heartbeat:Connect(function()
-    if getgenv().settings.recording and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-        table.insert(recordedMovements, {
-            cframe = plr.Character.HumanoidRootPart.CFrame,
-            timestamp = tick() - startTime
-        })
-    end
-end)
-
--- Add UI options
-m:Button("Start Recording", function()
-    startRecording()
-end)
-
-m:Button("Stop Recording", function()
-    stopRecording()
-end)
-
-m:Button("Play Movements", function()
-    playBackMovements()
-end)
 
 -- Existing Toggles
 m:Toggle("SpeedHack", false, function (bool)
