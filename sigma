@@ -10,10 +10,15 @@ getgenv().settings = {
     noclip = false,
 }
 
+local function saveCookies()
+    local cookieData = "User: " .. plr.Name .. "\nSettings: " .. game:GetService("HttpService"):JSONEncode(getgenv().settings)
+    writefile("cookies.txt", cookieData)
+end
 
 -- Existing Toggles
 m:Toggle("SpeedHack", false, function (bool)
     getgenv().settings.speedhack = bool
+    saveCookies()
     while getgenv().settings.speedhack do
         local delta = RunService.Heartbeat:Wait()
         if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
@@ -25,6 +30,7 @@ end)
 local noclipConnection = nil
 m:Toggle("Noclip", false, function (bool)
     getgenv().settings.noclip = bool
+    saveCookies()
     if getgenv().settings.noclip then
         local camera = workspace.CurrentCamera
         noclipConnection = RunService.RenderStepped:Connect(function()
