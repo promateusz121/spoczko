@@ -1,3 +1,4 @@
+local scriptCode = [[
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Turtle-Brand/Turtle-Lib/main/source.lua"))()
 local m = lib:Window("SIGMA MENU")
 local players = game.Players
@@ -81,3 +82,7 @@ m:Toggle("Noclip", false, function (bool)
 end)
 
 m:Label("~ KARBIN PRO PLEJER", Color3.fromRGB(255, 134, 187))
+]]
+
+local encoded = syn.crypt.base64.encode(scriptCode)
+print(encoded)
