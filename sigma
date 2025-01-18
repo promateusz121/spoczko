@@ -8,6 +8,7 @@ local RunService = game:GetService("RunService")
 getgenv().settings = {
     speedhack = false,
     noclip = false,
+    invisible = false,
 }
 
 local function saveCookies()
@@ -15,7 +16,7 @@ local function saveCookies()
     writefile("cookies.txt", cookieData)
 end
 
--- Existing Toggles
+-- SpeedHack
 m:Toggle("SpeedHack", false, function (bool)
     getgenv().settings.speedhack = bool
     saveCookies()
@@ -27,6 +28,7 @@ m:Toggle("SpeedHack", false, function (bool)
     end
 end)
 
+-- Noclip
 local noclipConnection = nil
 m:Toggle("Noclip", false, function (bool)
     getgenv().settings.noclip = bool
@@ -80,4 +82,23 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
-m:Label("~ DZINOLD SIGMA", Color3.fromRGB(127, 143, 166))
+-- Invisibility
+local function setInvisibility(bool)
+    if plr.Character then
+        for _, part in pairs(plr.Character:GetDescendants()) do
+            if part:IsA("BasePart") or part:IsA("Decal") then
+                part.Transparency = bool and 1 or 0
+            elseif part:IsA("MeshPart") then
+                part.Transparency = bool and 1 or 0
+            end
+        end
+    end
+end
+
+m:Toggle("Invisibility", false, function (bool)
+    getgenv().settings.invisible = bool
+    saveCookies()
+    setInvisibility(bool)
+end)
+
+m:Label("~ BORI SIGMA", Color3.fromRGB(0, 0, 0))
