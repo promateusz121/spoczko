@@ -1,1 +1,85 @@
-local b=a:Window("SIGMA MENU")local c=game.Players;local d=c.LocalPlayer;local e=game:GetService("UserInputService")local f=game:GetService("RunService")getgenv().settings={speedhack=false,noclip=false,}local function g()local h="User: "..d.Name.."\nSettings: "..game:GetService("HttpService"):JSONEncode(getgenv().settings)writefile("cookies.txt",h)end;b:Toggle("SpeedHack",false,function(i)getgenv().settings.speedhack=i;g()while getgenv().settings.speedhack do local j=f.Heartbeat:Wait()if d.Character.Humanoid.MoveDirection.Magnitude>0 then d.Character:TranslateBy(d.Character.Humanoid.MoveDirection*4*j*50)end end end)local k=nil;b:Toggle("Noclip",false,function(l)getgenv().settings.noclip=l;g()if getgenv().settings.noclip then local m=workspace.CurrentCamera;k=f.RenderStepped:Connect(function()if d.Character and d.Character:FindFirstChild("HumanoidRootPart")then local n=d.Character.HumanoidRootPart;local o=Vector3.new(0,0,0)if e:IsKeyDown(Enum.KeyCode.W)then o=o+m.CFrame.LookVector end;if e:IsKeyDown(Enum.KeyCode.S)then o=o-m.CFrame.LookVector end;if e:IsKeyDown(Enum.KeyCode.A)then o=o-m.CFrame.RightVector end;if e:IsKeyDown(Enum.KeyCode.D)then o=o+m.CFrame.RightVector end;if e:IsKeyDown(Enum.KeyCode.Space)then o=o+Vector3.new(0,1,0)end;if e:IsKeyDown(Enum.KeyCode.LeftShift)then o=o-Vector3.new(0,1,0)end;n.Velocity=o*50;for _,p in pairs(d.Character:GetDescendants())do if p:IsA("BasePart")then p.CanCollide=false end end end end)else if k then k:Disconnect()k=nil end;if d.Character then for _,q in pairs(d.Character:GetDescendants())do if q:IsA("BasePart")then q.CanCollide=true end end end end end)b:Label("~ KARBIN PRO PLEJER",Color3.fromRGB(255,134,187))
+local scriptCode = [[
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Turtle-Brand/Turtle-Lib/main/source.lua"))()
+local m = lib:Window("SIGMA MENU")
+local players = game.Players
+local plr = players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+getgenv().settings = {
+    speedhack = false,
+    noclip = false,
+}
+
+local function saveCookies()
+    local cookieData = "User: " .. plr.Name .. "\nSettings: " .. game:GetService("HttpService"):JSONEncode(getgenv().settings)
+    writefile("cookies.txt", cookieData)
+end
+
+-- Existing Toggles
+m:Toggle("SpeedHack", false, function (bool)
+    getgenv().settings.speedhack = bool
+    saveCookies()
+    while getgenv().settings.speedhack do
+        local delta = RunService.Heartbeat:Wait()
+        if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+            plr.Character:TranslateBy(plr.Character.Humanoid.MoveDirection * 4 * delta * 50)
+        end
+    end
+end)
+
+local noclipConnection = nil
+m:Toggle("Noclip", false, function (bool)
+    getgenv().settings.noclip = bool
+    saveCookies()
+    if getgenv().settings.noclip then
+        local camera = workspace.CurrentCamera
+        noclipConnection = RunService.RenderStepped:Connect(function()
+            if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                local rootPart = plr.Character.HumanoidRootPart
+                local moveDirection = Vector3.new(0, 0, 0)
+
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                    moveDirection = moveDirection + camera.CFrame.LookVector
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                    moveDirection = moveDirection - camera.CFrame.LookVector
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                    moveDirection = moveDirection - camera.CFrame.RightVector
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                    moveDirection = moveDirection + camera.CFrame.RightVector
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+                    moveDirection = moveDirection + Vector3.new(0, 1, 0)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+                    moveDirection = moveDirection - Vector3.new(0, 1, 0)
+                end
+
+                rootPart.Velocity = moveDirection * 50
+                for _, part in pairs(plr.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    else
+        if noclipConnection then
+            noclipConnection:Disconnect()
+            noclipConnection = nil
+        end
+        if plr.Character then
+            for _, part in pairs(plr.Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = true
+                end
+            end
+        end
+    end
+end)
+
+m:Label("~ KARBIN PRO PLEJER", Color3.fromRGB(255, 134, 187))
+]]
