@@ -80,4 +80,4 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
-m:Label("~ KARBIN PRO PLEJER", Color3.fromRGB(255, 134, 187))
+m:Label("~ PRO PLEJER", Color3.fromRGB(141, 255, 134))
