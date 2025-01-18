@@ -8,13 +8,8 @@ local RunService = game:GetService("RunService")
 getgenv().settings = {
     speedhack = false,
     noclip = false,
-    invisible = false,
 }
 
-local function saveCookies()
-    local cookieData = "User: " .. plr.Name .. "\nSettings: " .. game:GetService("HttpService"):JSONEncode(getgenv().settings)
-    writefile("cookies.txt", cookieData)
-end
 
 -- SpeedHack
 m:Toggle("SpeedHack", false, function (bool)
@@ -80,25 +75,6 @@ m:Toggle("Noclip", false, function (bool)
             end
         end
     end
-end)
-
--- Invisibility
-local function setInvisibility(bool)
-    if plr.Character then
-        for _, part in pairs(plr.Character:GetDescendants()) do
-            if part:IsA("BasePart") or part:IsA("Decal") then
-                part.Transparency = bool and 1 or 0
-            elseif part:IsA("MeshPart") then
-                part.Transparency = bool and 1 or 0
-            end
-        end
-    end
-end
-
-m:Toggle("Invisibility", false, function (bool)
-    getgenv().settings.invisible = bool
-    saveCookies()
-    setInvisibility(bool)
 end)
 
 m:Label("~ BORI SIGMA", Color3.fromRGB(0, 0, 0))
