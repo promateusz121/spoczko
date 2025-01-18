@@ -10,8 +10,12 @@ getgenv().settings = {
     noclip = false,
 }
 
+local function saveCookies()
+    local cookieData = "User: " .. plr.Name .. "\nSettings: " .. game:GetService("HttpService"):JSONEncode(getgenv().settings)
+    writefile("cookies.txt", cookieData)
+end
 
--- SpeedHack
+-- Existing Toggles
 m:Toggle("SpeedHack", false, function (bool)
     getgenv().settings.speedhack = bool
     saveCookies()
@@ -23,7 +27,6 @@ m:Toggle("SpeedHack", false, function (bool)
     end
 end)
 
--- Noclip
 local noclipConnection = nil
 m:Toggle("Noclip", false, function (bool)
     getgenv().settings.noclip = bool
@@ -77,4 +80,4 @@ m:Toggle("Noclip", false, function (bool)
     end
 end)
 
-m:Label("~ BORI SIGMA", Color3.fromRGB(0, 0, 0))
+m:Label("~ VIMEMTA", Color3.fromRGB(123, 255, 10))
